@@ -1,0 +1,11 @@
+
+http:
+    host: 0.0.0.0
+    port: 8893
+
+acl:
+    corpid: wwa6c980cc87acd679
+    corpsecret: 0mnk2Og1fJ3kJDB7y_NpT14w0mnk2Og1fJIfsdfopwY
+    agentid: 1000002
+    token: wQsjelciJ
+    aeskey: eUJIJfJIfsdfopwrJfscIJW290sdfjJhQb2CxxNlOL8
