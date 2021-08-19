@@ -9,10 +9,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
-	"time"
 
-	openapi "github.com/alibabacloud-go/darabonba-openapi/client"
-	dingtalkoauth2_1_0 "github.com/alibabacloud-go/dingtalk/oauth2_1_0"
 	log "github.com/gitsang/golog"
 	"go.uber.org/zap"
 )
@@ -25,12 +22,18 @@ type Text struct {
 	Content string `json:"content,omitempty"`
 }
 
+type Markdown struct {
+	Title string `json:"title"`
+	Text  string `json:"text"`
+}
+
 type Message struct {
 	// msg
-	MsgId    string `json:"msgId,omitempty"`
-	MsgType  string `json:"msgtype,omitempty"`
-	CreateAt int64  `json:"createAt,omitempty"`
-	Text     Text   `json:"text,omitempty"`
+	MsgId    string   `json:"msgId,omitempty"`
+	MsgType  string   `json:"msgtype,omitempty"`
+	CreateAt int64    `json:"createAt,omitempty"`
+	Text     Text     `json:"text,omitempty"`
+	Markdown Markdown `json:"markdown,omitempty"`
 
 	// sender
 	SenderId      string   `json:"senderId,omitempty"`
@@ -59,50 +62,45 @@ var (
 	expire int64
 )
 
-func parseCmd(cmd string) string {
+const (
+	TextType = "text"
+	MdType   = "markdown"
+)
+
+func parseCmd(cmd string) Message {
 	if strings.HasPrefix(cmd, ".d") {
 		d, _ := strconv.Atoi(strings.TrimPrefix(cmd, ".d"))
 		ans := rand.Intn(d)
-		result := "d" + strconv.Itoa(d) + " = " + strconv.Itoa(ans)
-		return result
+		content := "d" + strconv.Itoa(d) + " = " + strconv.Itoa(ans)
+
+		return Message{
+			MsgType: TextType,
+			Text: Text{
+				Content: content,
+			},
+		}
+	} else if strings.HasPrefix(cmd, ".help") {
+		title := "Help"
+		text := "# Command\n" +
+			"---\n" +
+			"- `.help`: 查看帮助\n" +
+			"- `.d+num`: 骰num面骰子\n"
+
+		return Message{
+			MsgType: MdType,
+			Markdown: Markdown{
+				Title: title,
+				Text:  text,
+			},
+		}
 	}
 
-	return ""
-}
-
-func GetToken() (string, error) {
-	if token != "" || time.Now().Unix() < expire {
-		return token, nil
+	return Message{
+		MsgType: TextType,
+		Text: Text{
+			Content: "invaild command",
+		},
 	}
-
-	var (
-		err      error
-		client   *dingtalkoauth2_1_0.Client
-		protocol = "https"
-		region   = "central"
-	)
-
-	client, err = dingtalkoauth2_1_0.NewClient(&openapi.Config{
-		Protocol: &protocol,
-		RegionId: &region,
-	})
-	if err != nil {
-		return "", err
-	}
-
-	getAccessTokenRequest := &dingtalkoauth2_1_0.GetAccessTokenRequest{
-		AppKey:    &config.Cfg.Acl.AppKey,
-		AppSecret: &config.Cfg.Acl.AppSecret,
-	}
-
-	resp, err := client.GetAccessToken(getAccessTokenRequest)
-	if err != nil {
-		return "", err
-	}
-
-	token = *resp.Body.AccessToken
-	expire = *resp.Body.ExpireIn
-	return token, nil
 }
 
 func CthulhuHandler(w http.ResponseWriter, r *http.Request) {
@@ -124,21 +122,14 @@ func CthulhuHandler(w http.ResponseWriter, r *http.Request) {
 	log.Info("cthulhu recv message", zap.String("query", raw), zap.Reflect("reqMsg", reqMsg))
 
 	// parse cmd
-	var content string
+	var respMsg Message
 	cmd := strings.TrimSpace(reqMsg.Text.Content)
 	if strings.HasPrefix(cmd, ".") {
-		content = parseCmd(cmd)
-	}
-
-	// response
-	respMsg := Message{
-		MsgType: "text",
-		Text: Text{
-			Content: content,
-		},
+		respMsg = parseCmd(cmd)
 	}
 	respMsgJ, _ := json.Marshal(respMsg)
 
+	// response
 	url := reqMsg.SessionWebHook
 	result, err := http.Post(url, "application/json", bytes.NewReader(respMsgJ))
 	if err != nil {
