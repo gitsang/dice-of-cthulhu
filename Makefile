@@ -6,14 +6,12 @@ default: cthulhu
 
 cthulhu:
 
-	mkdir -p bin
-	go build -o bin/cthulhu cmd/cthulhu.go
+	mkdir -p cthulhu/{bin,conf,log}
+	go build -o cthulhu/bin/cthulhu cmd/cthulhu.go
+	cp configs/* cthulhu/conf/
 
 tar: cthulhu
 
-	mkdir -p cthulhu/{bin,conf,log}
-	cp bin/* cthulhu/bin/
-	cp configs/* cthulhu/conf/
 	tar zcvf cthulhu/cthulhu.tar.gz cthulhu
 
 clean:

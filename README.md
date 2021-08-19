@@ -11,7 +11,7 @@ make
 ## run
 
 ```
-make tar
+make
 cd cthulhu/bin
 nohup ./cthulhu > ../log/cthulhu.log 2>&1 &
 ```
