@@ -127,9 +127,22 @@ func CthulhuHandler(w http.ResponseWriter, r *http.Request) {
 	if strings.HasPrefix(cmd, ".") {
 		respMsg = parseCmd(cmd)
 	}
-	respMsgJ, _ := json.Marshal(respMsg)
+
+	// ai
+	content := strings.TrimSpace(reqMsg.Text.Content)
+	if strings.Contains(content, "吗") {
+		content = strings.ReplaceAll(content, "吗", "")
+		content = strings.ReplaceAll(content, "?", "!")
+		respMsg = Message{
+			MsgType: TextType,
+			Text: Text{
+				Content: content,
+			},
+		}
+	}
 
 	// response
+	respMsgJ, _ := json.Marshal(respMsg)
 	url := reqMsg.SessionWebHook
 	result, err := http.Post(url, "application/json", bytes.NewReader(respMsgJ))
 	if err != nil {
