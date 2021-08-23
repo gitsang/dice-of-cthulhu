@@ -1,0 +1,13 @@
+[Unit]
+Description=Frp Client
+After=network.target
+
+[Service]
+Type=simple
+User=root
+Restart=on-failure
+RestartSec=5s
+ExecStart=/usr/local/bin/cthulhu -c /usr/local/etc/cthulhu/cthulhu.yml -l /var/log/cthulhu/cthulhu.log
+
+[Install]
+WantedBy=multi-user.target

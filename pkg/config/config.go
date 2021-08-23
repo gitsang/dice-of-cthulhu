@@ -1,9 +1,7 @@
 package config
 
 import (
-	log "github.com/gitsang/golog"
 	"github.com/jinzhu/configor"
-	"go.uber.org/zap"
 )
 
 var Version string
@@ -13,6 +11,10 @@ const (
 )
 
 var Cfg = struct {
+	Log struct {
+		Level string `default:"Info"`
+		Path  string `default:"../log/cthulhu.log"`
+	}
 	Http struct {
 		Host string `default:"0.0.0.0"`
 		Port int    `default:"8893"`
@@ -26,12 +28,8 @@ var Cfg = struct {
 	}
 }{}
 
-func Load(path string) {
-	err := configor.New(&configor.Config{
+func Load(path string) error {
+	return configor.New(&configor.Config{
 		ENVPrefix: ENVPrefix,
 	}).Load(&Cfg, path)
-	if err != nil {
-		log.Error("load config failed", zap.Error(err))
-	}
-	log.Info("loag config succes", zap.Reflect("config", Cfg))
 }

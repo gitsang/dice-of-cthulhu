@@ -5,8 +5,8 @@ github.com/benbjohnson/clock v1.1.0/go.mod h1:J11/hYXuz8f4ySSvYwY0FKfm+ezbsZBKZx
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/gitsang/golog v0.1.0 h1:LBvzS+HCEhkoNu6ja4kl39Cjk1R1ZYW2agfvgJ0I7+U=
-github.com/gitsang/golog v0.1.0/go.mod h1:P8pYbPZoH9lzYO1FUhQb6zughMYAGDIP+OWLrFrynxo=
+github.com/gitsang/golog v0.1.1 h1:F4DOmOd3zpDgANA0VMlhxk55fe1ODWiRjo3ta6qJMys=
+github.com/gitsang/golog v0.1.1/go.mod h1:6+VaZj4n/sG54aijJRCZRnuI/fCOQMtPNEjAdgfQ9iM=
 github.com/google/renameio v0.1.0/go.mod h1:KWCgfxg9yswjAJkECMjeO8J8rahYeXnNhOm40UhjYkI=
 github.com/jinzhu/configor v1.2.1 h1:OKk9dsR8i6HPOCZR8BcMtcEImAFjIhbJFZNyn5GCZko=
 github.com/jinzhu/configor v1.2.1/go.mod h1:nX89/MOmDba7ZX7GCyU/VIaQ2Ar2aizBl2d3JLF/rDc=

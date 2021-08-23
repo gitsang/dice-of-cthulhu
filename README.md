@@ -8,10 +8,14 @@ Dice bot for dingding
 make
 ```
 
+## install
+
+```
+make install
+```
+
 ## run
 
 ```
-make
-cd cthulhu/bin
-nohup ./cthulhu > ../log/cthulhu.log 2>&1 &
+make run
 ```
