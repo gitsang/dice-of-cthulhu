@@ -127,25 +127,40 @@ func (ds MoonCakeDices) Gamble() (diceStr string, result string) {
 		diceStr += SixSideDiceMap[d]
 	}
 
-	switch ds.Count[4] {
-	case 1:
-		result = "yixiu"
-	case 2:
-		result = "erju"
-	case 3:
-		result = "sanhong"
+	var hall bool
+	for _, cnt := range ds.Count {
+		if cnt != 1 {
+			hall = false
+			break
+		}
+		hall = true
+	}
+	if hall {
+		result = " 对堂 "
+		return
 	}
 
-	for k, v := range ds.Count {
-		if v == 4 {
+	for k, cnt := range ds.Count {
+		if cnt == 1 {
 			if k == 4 {
-				result += "zhuangyuan"
-			} else {
-				result += "sijin"
+				result = " 一秀 "
 			}
-		}
-		if v == 5 {
-			result = "zhuangyuan"
+		} else if cnt == 2 {
+			if k == 4 {
+				result = " 二举 "
+			}
+		} else if cnt == 3 {
+			if k == 4 {
+				result += " 三红 "
+			}
+		} else if cnt == 4 {
+			if k == 4 {
+				result += " 状元 "
+			} else {
+				result += " 四进 "
+			}
+		} else if cnt == 5 {
+			result += " 状元 "
 		}
 	}
 
