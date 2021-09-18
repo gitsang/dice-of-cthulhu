@@ -26,6 +26,7 @@ install: cthulhu
 run: install
 
 	systemctl start cthulhu
+	systemctl status cthulhu
 
 clean:
 
