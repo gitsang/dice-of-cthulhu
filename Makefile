@@ -2,9 +2,10 @@
 
 SHELL=/bin/bash
 
-default: help
+default: cthulhu
 
 help:
+	# make help      : help
 	# make ctuhlhu   : build project
 	# make tar       : build and tar
 	# make install   : install to systemd

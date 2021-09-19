@@ -6,11 +6,11 @@ import (
 	"strconv"
 )
 
-func Dice(d int) common.Message {
+func Dice(d int) *common.Message {
 	ans := rand.Intn(d)
 	content := "d" + strconv.Itoa(d) + " = " + strconv.Itoa(ans)
 
-	return common.Message{
+	return &common.Message{
 		MsgType: common.TextType,
 		Text: common.Text{
 			Content: content,

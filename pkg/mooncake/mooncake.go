@@ -87,7 +87,7 @@ func (ds MoonCakeDices) Gamble() (diceStr string, result string) {
 	return
 }
 
-func MoonCakeGamblingInfo(cmd string) common.Message {
+func MoonCakeGamblingInfo(cmd string) *common.Message {
 	title := "MoonCake Gambling"
 	text := ""
 
@@ -98,7 +98,7 @@ func MoonCakeGamblingInfo(cmd string) common.Message {
 		text = "init success"
 	}
 
-	return common.Message{
+	return &common.Message{
 		MsgType: common.MdType,
 		Markdown: common.Markdown{
 			Title: title,
@@ -107,7 +107,7 @@ func MoonCakeGamblingInfo(cmd string) common.Message {
 	}
 }
 
-func MoonCakeGambling(usr string) common.Message {
+func MoonCakeGambling(usr string) *common.Message {
 	title := "MoonCake Gambling"
 	text := "# " + usr + " "
 
@@ -115,7 +115,7 @@ func MoonCakeGambling(usr string) common.Message {
 	text += diceStr + "\n" + result
 
 	log.Info("mooncake gambling", zap.String("text", text))
-	return common.Message{
+	return &common.Message{
 		MsgType: common.MdType,
 		Markdown: common.Markdown{
 			Title: title,

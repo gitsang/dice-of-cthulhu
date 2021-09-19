@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"cthulhu/pkg/common"
 	"cthulhu/pkg/dice"
+	"cthulhu/pkg/lots"
 	"cthulhu/pkg/mooncake"
 	"encoding/json"
 	"io/ioutil"
@@ -15,7 +16,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func Help() common.Message {
+func Help() *common.Message {
 	title := "Help"
 	text := "# Command\n" +
 		"---\n" +
@@ -24,7 +25,7 @@ func Help() common.Message {
 		"- `.m`: mooncake gambling\n" +
 		"- `.mooncake [option]`: mooncake gambling command\n"
 
-	return common.Message{
+	return &common.Message{
 		MsgType: common.MdType,
 		Markdown: common.Markdown{
 			Title: title,
@@ -33,7 +34,7 @@ func Help() common.Message {
 	}
 }
 
-func parseMessage(reqMsg common.Message) common.Message {
+func parseMessage(reqMsg common.Message) *common.Message {
 	cmd := reqMsg.Text.Content
 	cmd = strings.TrimSpace(cmd)
 	log.Info("parse command", zap.String("cmd", cmd))
@@ -55,7 +56,11 @@ func parseMessage(reqMsg common.Message) common.Message {
 		return mooncake.MoonCakeGambling(reqMsg.SenderNick)
 	}
 
-	return common.Message{
+	if strings.HasPrefix(cmd, "签到") {
+		return lots.GenLots(reqMsg.SenderId)
+	}
+
+	return &common.Message{
 		MsgType: common.TextType,
 		Text: common.Text{
 			Content: "invaild command",

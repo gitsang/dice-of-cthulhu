@@ -26,6 +26,11 @@ var Cfg = struct {
 		AppKey    string
 		AppSecret string
 	}
+	Service struct {
+		Lots struct {
+			DataPath string
+		}
+	}
 }{}
 
 func Load(path string) error {
