@@ -68,6 +68,10 @@ const (
 	MdType   = "markdown"
 )
 
+func init() {
+	SixSideDiceMapInit()
+}
+
 func Help() Message {
 	title := "Help"
 	text := "# Command\n" +
@@ -98,8 +102,7 @@ func Dice(d int) Message {
 
 var SixSideDiceMap map[int]string
 
-func init() {
-	// init six side dice
+func SixSideDiceMapInit() {
 	SixSideDiceMap = make(map[int]string)
 	SixSideDiceMap[1] = "⚀"
 	SixSideDiceMap[2] = "⚁"
@@ -107,11 +110,14 @@ func init() {
 	SixSideDiceMap[4] = "⚃"
 	SixSideDiceMap[5] = "⚄"
 	SixSideDiceMap[6] = "⚅"
+	moonCakeDices = NewMoonCakeDices()
 }
 
 type MoonCakeDices struct {
 	Count map[int]int
 }
+
+var moonCakeDices MoonCakeDices
 
 func NewMoonCakeDices() MoonCakeDices {
 	return MoonCakeDices{
@@ -167,11 +173,31 @@ func (ds MoonCakeDices) Gamble() (diceStr string, result string) {
 	return
 }
 
+func MoonCakeGamblingInfo(cmd string) Message {
+	title := "MoonCake Gambling"
+	text := ""
+
+	cmd = strings.TrimPrefix(cmd, ".mooncake")
+	cmd = strings.TrimSpace(cmd)
+	if cmd == "init" {
+		moonCakeDices = NewMoonCakeDices()
+		text = "init success"
+	}
+
+	return Message{
+		MsgType: MdType,
+		Markdown: Markdown{
+			Title: title,
+			Text:  text,
+		},
+	}
+}
+
 func MoonCakeGambling(usr string) Message {
 	title := "MoonCake Gambling"
 	text := "# " + usr + " "
 
-	diceStr, result := NewMoonCakeDices().Gamble()
+	diceStr, result := moonCakeDices.Gamble()
 	text += diceStr + "\n" + result
 
 	log.Info("mooncake gambling", zap.String("text", text))
@@ -199,7 +225,7 @@ func parseMessage(reqMsg Message) Message {
 	}
 
 	if strings.HasPrefix(cmd, ".mooncake") {
-		return MoonCakeGambling(reqMsg.SenderNick)
+		return MoonCakeGamblingInfo(reqMsg.Text.Content)
 	}
 
 	if strings.HasPrefix(cmd, ".m") {
