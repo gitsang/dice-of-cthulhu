@@ -29,13 +29,13 @@ install: cthulhu
 	mkdir -p /usr/local/etc/cthulhu
 	mkdir -p /var/log/cthulhu
 	cp cthulhu/bin/cthulhu /usr/local/bin/cthulhu
-	cp configs/cthulhu.yml /usr/local/etc/cthulhu/cthulhu.yml
+	cp configs/* /usr/local/etc/cthulhu/
 	cp configs/cthulhu.service /usr/lib/systemd/system/cthulhu.service
 
 run: install
 
 	systemctl start cthulhu
-	systemctl status cthulhu
+	tail -f /var/log/cthulhu/cthulhu.log
 
 clean:
 

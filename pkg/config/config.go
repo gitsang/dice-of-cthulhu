@@ -29,6 +29,7 @@ var Cfg = struct {
 	Service struct {
 		Lots struct {
 			DataPath string
+			PkgUse   string `default:"1"`
 		}
 	}
 }{}

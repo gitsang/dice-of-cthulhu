@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"strconv"
+	"strings"
 	"time"
 
 	log "github.com/gitsang/golog"
@@ -49,6 +50,11 @@ func Init(path string) error {
 
 	userDatas = make(map[string]UserData)
 
+	log.Info("lots init success",
+		zap.String("lots_path", path),
+		zap.Reflect("lotsDatas", lotsDatas),
+		zap.Reflect("userDatas", userDatas),
+	)
 	return nil
 }
 
@@ -56,7 +62,8 @@ func GenLots(usr string) *common.Message {
 	var (
 		err      error
 		text     string
-		lotsData = lotsDatas["1"]
+		idx      int
+		lotsData Pkg
 	)
 
 	// init data
@@ -67,6 +74,7 @@ func GenLots(usr string) *common.Message {
 			return nil
 		}
 	}
+	lotsData = lotsDatas[config.Cfg.Service.Lots.PkgUse]
 
 	// init user data if not exist
 	if _, ok := userDatas[usr]; !ok {
@@ -76,16 +84,41 @@ func GenLots(usr string) *common.Message {
 
 	// already gen
 	day := time.Now().Day()
-	if idx, ok := usrData.Lots[day]; ok {
-		text = "already gen\n" +
-			lotsData.Lots[strconv.Itoa(idx)].Content
+	_, ok := usrData.Lots[day]
+	if ok {
+		idx = usrData.Lots[day]
+
+		lot := lotsData.Lots[strconv.Itoa(idx)]
+
+		text = "_" + lotsData.Name + "_\n\n" +
+			"_今日已签到_\n\n" +
+			"---\n\n" +
+			"# " + lot.Name + "\n\n"
+		contents := strings.Split(lot.Content, " ")
+		for _, c := range contents {
+			text += "" + c + "\n\n"
+		}
 	} else {
 		rand.Seed(time.Now().UnixNano())
-		idx = rand.Intn(len(lotsData.Lots))
-		text = lotsData.Lots[strconv.Itoa(idx)].Content
+		idx = rand.Intn(len(lotsData.Lots)-1) + 1
+
+		lot := lotsData.Lots[strconv.Itoa(idx)]
+
+		text = "_" + lotsData.Name + "_\n\n" +
+			"---\n\n" +
+			"# " + lot.Name + "\n\n"
+		contents := strings.Split(lot.Content, " ")
+		for _, c := range contents {
+			text += "" + c + "\n\n"
+		}
 		usrData.Lots[day] = idx
 	}
 
+	log.Info("gen lots",
+		zap.String("usr", usr),
+		zap.Int("day", day),
+		zap.Int("idx", idx),
+	)
 	return &common.Message{
 		MsgType: common.MdType,
 		Markdown: common.Markdown{
