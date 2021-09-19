@@ -2,7 +2,15 @@
 
 SHELL=/bin/bash
 
-default: cthulhu
+default: help
+
+help:
+	# make ctuhlhu   : build project
+	# make tar       : build and tar
+	# make install   : install to systemd
+	# make run       : install and run by systemd
+	# make clean     : clean make file
+	# make uninstall : uninstall
 
 cthulhu:
 
@@ -31,3 +39,8 @@ run: install
 clean:
 
 	rm -fr bin cthulhu
+
+uninstall:
+
+	systemctl stop cthulhu
+	rm -fr /usr/local/bin/cthuluh /usr/local/etc/cthulhu /usr/lib/systemd/system/cthulhu.service
