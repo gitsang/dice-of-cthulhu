@@ -28,27 +28,26 @@ func SixSideDiceMapInit() {
 }
 
 type MoonCakeDices struct {
-	Count map[int]int
 }
 
 var moonCakeDices MoonCakeDices
 
 func NewMoonCakeDices() MoonCakeDices {
-	return MoonCakeDices{
-		Count: make(map[int]int),
-	}
+	return MoonCakeDices{}
 }
 
-func (ds MoonCakeDices) Gamble() (diceStr string, result string) {
+func (ds *MoonCakeDices) Gamble() (diceStr string, result string) {
+	counts := make(map[int]int)
+
 	rand.Seed(time.Now().UnixNano())
 	for i := 0; i < 6; i++ {
 		d := rand.Intn(5) + 1
-		ds.Count[d]++
+		counts[d]++
 		diceStr += SixSideDiceMap[d]
 	}
 
 	var hall bool
-	for _, cnt := range ds.Count {
+	for _, cnt := range counts {
 		if cnt != 1 {
 			hall = false
 			break
@@ -60,14 +59,14 @@ func (ds MoonCakeDices) Gamble() (diceStr string, result string) {
 		return
 	}
 
-	for k, cnt := range ds.Count {
+	for k, cnt := range counts {
 		if cnt == 1 {
 			if k == 4 {
-				result = " 一秀 "
+				result += " 一秀 "
 			}
 		} else if cnt == 2 {
 			if k == 4 {
-				result = " 二举 "
+				result += " 二举 "
 			}
 		} else if cnt == 3 {
 			if k == 4 {
@@ -84,6 +83,7 @@ func (ds MoonCakeDices) Gamble() (diceStr string, result string) {
 		}
 	}
 
+	log.Debug("gamble result", zap.Reflect("ds", ds))
 	return
 }
 
