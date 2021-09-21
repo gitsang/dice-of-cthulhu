@@ -41,7 +41,7 @@ func (ds *MoonCakeDices) Gamble() (diceStr string, result string) {
 
 	rand.Seed(time.Now().UnixNano())
 	for i := 0; i < 6; i++ {
-		d := rand.Intn(5) + 1
+		d := rand.Intn(6) + 1
 		counts[d]++
 		diceStr += SixSideDiceMap[d]
 	}
