@@ -4,6 +4,7 @@ import (
 	"cthulhu/pkg/config"
 	"io/ioutil"
 	"net/http"
+	_ "net/http/pprof"
 	"strconv"
 	"strings"
 
