@@ -1,0 +1,8 @@
+data/
+logs/
+device.json
+go-cqhttp
+go-cqhttp_linux_amd64.tar.gz
+LICENSE
+qrcode.png
+README.md
