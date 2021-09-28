@@ -75,31 +75,34 @@ func CQHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var respMsg string
-	var title string
-	var content string
+	//var title string
+	//var content string
 	if strings.Contains(reqMsg.RawMessage, ".d6") {
 		res := rand.Intn(6) + 1
 		respMsg = reqMsg.Sender.Nickname + "\n" +
 			"dice result: " + strconv.Itoa(res)
 
-		title = "dice"
-		content = "dice result: " + strconv.Itoa(res)
+		//title = "dice"
+		//content = "dice result: " + strconv.Itoa(res)
 	} else if strings.Contains(reqMsg.RawMessage, ".lots") {
 		respMsg = lots.GenLots(reqMsg.Sender.Nickname).Markdown.Text
 
-		title = "dice"
-		content = lots.GenLots(reqMsg.Sender.Nickname).Markdown.Text
+		//title = "dice"
+		//content = lots.GenLots(reqMsg.Sender.Nickname).Markdown.Text
+	} else {
+		log.Debug("not command, ignore", zap.String("RawMessage", reqMsg.RawMessage))
+		return
 	}
 
-	respMsg = fmt.Sprintf(`[CQ:xml,data=<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-		<msg serviceID="1">
-			<item>
-				<title>%s</title>
-				<summary>%s</summary>
-				<summary>%s</summary>
-			</item>
-		</msg>
-	]`, title, content, "test msg")
+	//respMsg = fmt.Sprintf(`[CQ:xml,data=<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	//	<msg serviceID="1">
+	//		<item>
+	//			<title>%s</title>
+	//			<summary>%s</summary>
+	//			<summary>%s</summary>
+	//		</item>
+	//	</msg>
+	//]`, title, content, "test msg")
 
 	// response
 	param := url.Values{}
