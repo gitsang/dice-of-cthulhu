@@ -19,17 +19,26 @@ import (
 func Help() *common.Message {
 	title := "Help"
 	text := `
-# Command
+# Help
 ---
-| command                | option |                        |
-| --                     | --     | --                     |
-| ${bq}help${bq}         |        | 查看帮助               |
-| ${bq}d+num${bq}        |        | 骰num面骰子            |
-| ${bq}m${bq}            |        | mooncake gambling      |
-|                        | init   | mooncake gambling init |
-| ${bq}checkin/签到${bq} |        | 签到                   |
+
+### 基本命令
+
+- help: 查看帮助
+- d+num: 骰num面骰子
+
+### 博饼
+
+- m: 博饼
+
+> _Options_
+
+> init: 初始化
+
+### 签到
+
+- checkin/签到: 签到
 `
-	text = strings.Replace(text, "${bq}", "`", -1)
 
 	return &common.Message{
 		MsgType: common.MdType,
