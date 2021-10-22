@@ -18,12 +18,18 @@ import (
 
 func Help() *common.Message {
 	title := "Help"
-	text := "# Command\n" +
-		"---\n" +
-		"- `.help`: 查看帮助\n" +
-		"- `.d+num`: 骰num面骰子\n" +
-		"- `.m`: mooncake gambling\n" +
-		"- `.mooncake [option]`: mooncake gambling command\n"
+	text := `
+# Command
+---
+| command                | option |                        |
+| --                     | --     | --                     |
+| ${bq}help${bq}         |        | 查看帮助               |
+| ${bq}d+num${bq}        |        | 骰num面骰子            |
+| ${bq}m${bq}            |        | mooncake gambling      |
+|                        | init   | mooncake gambling init |
+| ${bq}checkin/签到${bq} |        | 签到                   |
+`
+	text = strings.Replace(text, "${bq}", "`", -1)
 
 	return &common.Message{
 		MsgType: common.MdType,
@@ -39,24 +45,22 @@ func parseMessage(reqMsg common.Message) *common.Message {
 	cmd = strings.TrimSpace(cmd)
 	log.Info("parse command", zap.String("cmd", cmd))
 
-	if strings.HasPrefix(cmd, ".help") {
+	if cmd == "help" {
 		return Help()
 	}
 
-	if strings.HasPrefix(cmd, ".d") {
+	if strings.HasPrefix(cmd, "d") {
 		d, _ := strconv.Atoi(strings.TrimPrefix(cmd, ".d"))
 		return dice.Dice(d)
 	}
 
-	if strings.HasPrefix(cmd, ".mooncake") {
+	if cmd == "m" {
+		return mooncake.MoonCakeGambling(reqMsg.SenderNick)
+	} else if strings.HasPrefix(cmd, ".m") {
 		return mooncake.MoonCakeGamblingInfo(reqMsg.Text.Content)
 	}
 
-	if strings.HasPrefix(cmd, ".m") {
-		return mooncake.MoonCakeGambling(reqMsg.SenderNick)
-	}
-
-	if strings.HasPrefix(cmd, "签到") {
+	if cmd == "checkin" || cmd == "签到" {
 		return lots.GenLots(reqMsg.SenderId)
 	}
 
