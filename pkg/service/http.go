@@ -3,6 +3,7 @@ package service
 import (
 	"cthulhu/pkg/config"
 	"net/http"
+	_ "net/http/pprof"
 	"strconv"
 	"strings"
 
