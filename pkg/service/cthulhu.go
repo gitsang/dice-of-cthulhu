@@ -59,7 +59,7 @@ func parseMessage(reqMsg common.Message) *common.Message {
 	}
 
 	if strings.HasPrefix(cmd, "d") {
-		d, _ := strconv.Atoi(strings.TrimPrefix(cmd, ".d"))
+		d, _ := strconv.Atoi(strings.TrimPrefix(cmd, "d"))
 		return dice.Dice(d)
 	}
 
